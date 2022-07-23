@@ -1,11 +1,11 @@
 <template>
   <div>
   <h3>GraphQL with Apollo & Vue</h3>
-    <input type="text" v-model="searchTerm">
+    <input type="text" v-model="searchTerm" autofocus>
     <p v-if="loading">Loading...</p>
     <p v-else-if="error">Something went wrong! Please try again</p>
     <template v-else>
-    <p v-if="result" v-for="book in result.allBooks" :key="book.id">
+    <p v-for="book in books" :key="book.id">
     {{ book.title }}
     </p>
     </template>
@@ -14,8 +14,8 @@
 </template>
 
 <script>
-import { ref } from "vue";
-import { useQuery } from '@vue/apollo-composable'
+import { ref, computed } from "vue";
+import { useQuery, useResult } from '@vue/apollo-composable'
 import ALL_BOOKS_QUERY from './graphql/allBooks.query.gql'
 
 /*/ No longer needed, since we're importing queries from *.gql file
@@ -46,12 +46,27 @@ export default {
     // This will be executed before the creation of the component
     setup() {
       const searchTerm = ref('')
-      const { result, loading, error } = useQuery(ALL_BOOKS_QUERY, () => ({ 
-        search: searchTerm.value 
-        }))
+      const { result, loading, error } = useQuery(ALL_BOOKS_QUERY, 
+        () => ({ 
+          search: searchTerm.value 
+        }),
+        () => ({
+          // Send query only when the user stops typing (delay in ms)
+          debounce: 500,
+          // the query fires only when this condition becomes true
+          enabled: searchTerm.value.length > 2
+        })
+        )
       // console.log(result)
+
+      // Save results into books constant
+      const defaultValue = [] // default value for allBooks
+      // Deprecated way
+      // const books = useResult(result, defaultValue, data => data.allBooks)
+      // Recommended way
+      const books = computed(() => result.value?.allBooks ?? defaultValue)
       // return results to make it available to the template
-      return { result, searchTerm, loading, error }
+      return { books, searchTerm, loading, error }
     }
   }
 </script>
