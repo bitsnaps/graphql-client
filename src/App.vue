@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <div v-if="result">
+  <h3>GraphQL with Apollo & Vue</h3>
+
+    <input type="text" v-model="searchTerm">
     <p v-for="book in result.allBooks" :key="book.id">
     {{ book.title }}
     </p>
@@ -7,6 +10,7 @@
 </template>
 
 <script>
+import { ref } from "vue";
 import { useQuery } from '@vue/apollo-composable'
 import ALL_BOOKS_QUERY from './graphql/allBooks.query.gql'
 
@@ -37,10 +41,14 @@ export default {
     name: 'App',
     // This will be executed before the creation of the component
     setup() {
-      const { result } = useQuery(ALL_BOOKS_QUERY)
-      console.log(result)
+      const searchTerm = ref('')
+      const { result } = useQuery(ALL_BOOKS_QUERY, () => ({ 
+        search: searchTerm.value 
+        })
+        )
+      // console.log(result)
       // return results to make it available to the template
-      return { result }
+      return { result, searchTerm }
     }
   }
 </script>
