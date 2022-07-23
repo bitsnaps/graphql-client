@@ -2,6 +2,13 @@
   <div>
   <h3>GraphQL with Apollo & Vue</h3>
     
+    <div>
+      <button v-if="!showNewBookForm" @click="showNewBookForm = true">
+        Add a new book
+      </button>
+      <AddBook v-if="showNewBookForm" :search="searchTerm" @closeForm="showNewBookForm = false" />
+    </div>
+
     <input type="text" v-model="searchTerm" autofocus>
     <p v-if="loading">Loading...</p>
     <p v-else-if="error">Something went wrong! Please try again</p>
@@ -32,6 +39,7 @@ import { ref, computed } from "vue";
 import { useQuery, useResult } from '@vue/apollo-composable'
 import ALL_BOOKS_QUERY from './graphql/allBooks.query.gql'
 import EditRating from "./components/EditRating.vue"
+import AddBook from "./components/AddBook.vue"
 
 /*/ No longer needed, since we're importing queries from *.gql file
 import gql from 'graphql-tag'
@@ -59,12 +67,14 @@ apolloClient
 export default {
     name: 'App',
     components: {
-      EditRating
+      EditRating,
+      AddBook
     },
     // This will be executed before the creation of the component
     setup() {
       const searchTerm = ref('')
       const activeBook = ref(null)
+      const showNewBookForm = ref(false)
 
       const { result, loading, error } = useQuery(ALL_BOOKS_QUERY, 
         () => ({ 
@@ -80,13 +90,13 @@ export default {
       // console.log(result)
 
       // Save results into books constant
-      const defaultValue = [] // default value for allBooks
+      // const defaultValue = [] // default value for allBooks
       // Deprecated way
       // const books = useResult(result, defaultValue, data => data.allBooks)
       // Recommended way
-      const books = computed(() => result.value?.allBooks ?? defaultValue)
+      const books = computed(() => result.value?.allBooks ?? [])
       // return results to make it available to the template
-      return { books, searchTerm, loading, error, activeBook }
+      return { books, searchTerm, loading, error, activeBook, showNewBookForm }
     }
   }
 </script>

@@ -13,7 +13,7 @@
 <script>
 import { ref } from 'vue'
 import UPDATE_BOOK_MUTATION from '../graphql/updateBook.mutation.gql'
-import { useMutation } from "@vue/apollo-composable";
+import { useMutation } from "@vue/apollo-composable"
 
 
 export default {
