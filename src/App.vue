@@ -8,8 +8,10 @@
 
 <script>
 import { useQuery } from '@vue/apollo-composable'
-import gql from 'graphql-tag'
+import ALL_BOOKS_QUERY from './graphql/allBooks.query.gql'
 
+/*/ No longer needed, since we're importing queries from *.gql file
+import gql from 'graphql-tag'
 const ALL_BOOKS_QUERY = gql`
     query allBooks {
         allBooks {
@@ -19,7 +21,10 @@ const ALL_BOOKS_QUERY = gql`
         }
     }
 `
-/*
+*/
+
+
+/*/ No longer needed, since we've injected it into vue app
 apolloClient
     .query({
         query: ALL_BOOKS_QUERY
@@ -33,7 +38,7 @@ export default {
     // This will be executed before the creation of the component
     setup() {
       const { result } = useQuery(ALL_BOOKS_QUERY)
-      // console.log(result);
+      console.log(result)
       // return results to make it available to the template
       return { result }
     }
