@@ -1,11 +1,15 @@
 <template>
-  <div v-if="result">
+  <div>
   <h3>GraphQL with Apollo & Vue</h3>
-
     <input type="text" v-model="searchTerm">
-    <p v-for="book in result.allBooks" :key="book.id">
+    <p v-if="loading">Loading...</p>
+    <p v-else-if="error">Something went wrong! Please try again</p>
+    <template v-else>
+    <p v-if="result" v-for="book in result.allBooks" :key="book.id">
     {{ book.title }}
     </p>
+    </template>
+
   </div>
 </template>
 
@@ -42,13 +46,12 @@ export default {
     // This will be executed before the creation of the component
     setup() {
       const searchTerm = ref('')
-      const { result } = useQuery(ALL_BOOKS_QUERY, () => ({ 
+      const { result, loading, error } = useQuery(ALL_BOOKS_QUERY, () => ({ 
         search: searchTerm.value 
-        })
-        )
+        }))
       // console.log(result)
       // return results to make it available to the template
-      return { result, searchTerm }
+      return { result, searchTerm, loading, error }
     }
   }
 </script>
