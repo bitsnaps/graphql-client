@@ -1,11 +1,6 @@
-# Vue 3 + Vite
+# Vue 3 + Vite + GraphQL & Apollo Client
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
-
-## Recommended IDE Setup
-
-- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
-
+This project was created with Vue 3 in Vite. It demonstrates the usage of GraphQL using Apollo Client with Vue3.
 ## Setup
 This instructions can be used to create this app:
 ```
@@ -31,4 +26,10 @@ npm install @vue/apollo-composable
 
 # Used to store GraphQL queries into *.gql files
 npm install @rollup/plugin-graphql
+
 ```
+for GraphQL Subscriptions:
+```
+npm install subscriptions-transport-ws
+```
+or better use: [graphql-ws](https://www.npmjs.com/package/graphql-ws) instead.
