@@ -22,13 +22,27 @@
           @closeForm="activeBook = null"
         />
       </p>
+
       <template v-else>
-        <p v-for="book in books" :key="book.id">
-        {{ book.title }} - {{ book.rating}}*
-        <button @click="activeBook = book">Edit rating</button>
-        </p>
+        <section class="list-wrapper">
+          <div class="list">
+            <h3>All Books</h3>
+            <p v-for="book in books" :key="book.id">
+              {{ book.title }} - {{ book.rating}}
+              <button @click="activeBook = book">Edit rating</button>
+            </p>
+          </div>
+
+          <div class="list">
+            <h3>Favorite Books</h3>
+            <p v-for="book in favBooksResult.favoriteBooks" :key="book.id">
+              {{ book.title }}
+            </p>            
+          </div>
+        </section>
 
       </template>
+
     </template>
 
   </div>
@@ -39,6 +53,7 @@ import { ref, computed } from "vue";
 import { useQuery, useResult } from '@vue/apollo-composable'
 import ALL_BOOKS_QUERY from './graphql/allBooks.query.gql'
 import BOOK_SUBSCRIPTION from './graphql/newBook.subscription.gql'
+import FAVORITE_BOOKS_QUERY from './graphql/favoriteBooks.query.gql'
 import EditRating from "./components/EditRating.vue"
 import AddBook from "./components/AddBook.vue"
 
@@ -110,8 +125,13 @@ export default {
       // const books = useResult(result, defaultValue, data => data.allBooks)
       // Recommended way
       const books = computed(() => result.value?.allBooks ?? [])
+
+      const { result: favBooksResult } = useQuery(FAVORITE_BOOKS_QUERY)
+
+      // console.log(favBooksResult.value);
+
       // return results to make it available to the template
-      return { books, searchTerm, loading, error, activeBook, showNewBookForm }
+      return { books, searchTerm, loading, error, activeBook, showNewBookForm, favBooksResult }
     }
   }
 </script>
